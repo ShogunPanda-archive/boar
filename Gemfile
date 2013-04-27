@@ -9,7 +9,12 @@ source "http://rubygems.org"
 gemspec
 
 # Testing
-# TODO: Add testing gems here, usually just rake and rspec.
+gem "rspec", "~> 2.13.0"
+gem "rake", "~> 10.0.3"
 
 # Documentation
-# TODO: Add testing gems here, usually simplecov, pry, yard, kramdown, github-markup.
+gem "simplecov", ">= 0.7.1"
+gem "pry", ">= 0"
+gem "yard", ">= 0.8.5"
+gem "kramdown", ">= 1.0.1"
+gem "github-markup", ">= 0.7.5"

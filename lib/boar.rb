@@ -4,7 +4,14 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-# TODO: Include dependencies
+require "mbrao"
+require "mustache"
+require "mime-types"
+require "redis"
+require "oj"
 
 require "boar/version" if !defined?(Boar::Version)
-# TODO: Include other sources
+require "boar/configuration"
+require "boar/router"
+require "boar/engine"
+require "boar/exceptions"

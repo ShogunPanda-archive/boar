@@ -4,10 +4,10 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-source "http://rubygems.org"
-
-gemspec
-
-# Testing
-gem "rspec", "~> 2.12.0"
-gem "rake", "~> 10.0.3"
+module Boar
+  class PagesController < ApplicationController
+    def main
+      Boar::Services::Pages.new(self).run(:main)
+    end
+  end
+end

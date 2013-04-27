@@ -4,6 +4,7 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
+# A Rails engine to handle local static pages and downloads on the cloud.
 module Boar
   # The current version of boar, according to semantic versioning.
   #

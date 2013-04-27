@@ -4,10 +4,13 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-source "http://rubygems.org"
-
-gemspec
-
-# Testing
-gem "rspec", "~> 2.12.0"
-gem "rake", "~> 10.0.3"
+module Boar
+  module Handlers
+    module Downloads
+      #noinspection RubyClassModuleNamingConvention
+      class S3 < Base
+        # TODO: Implement me
+      end
+    end
+  end
+end

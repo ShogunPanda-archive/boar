@@ -4,10 +4,8 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-source "http://rubygems.org"
+require "spec_helper"
 
-gemspec
+describe Boar::PagesController do
 
-# Testing
-gem "rspec", "~> 2.12.0"
-gem "rake", "~> 10.0.3"
+end

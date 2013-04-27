@@ -5,9 +5,13 @@
 [![Build Status](https://secure.travis-ci.org/ShogunPanda/boar.png?branch=master)](https://travis-ci.org/ShogunPanda/boar)
 [![Code Climate](https://codeclimate.com/github/ShogunPanda/boar.png)](https://codeclimate.com/github/ShogunPanda/boar)
 
+http://sw.cow.tc/boar
 
+http://rdoc.info/gems/boar
 
-http://github.com/ShogunPanda/boar
+## Usage
+
+**TODO**
 
 ## Contributing to boar
  

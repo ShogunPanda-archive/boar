@@ -10,8 +10,8 @@ Gem::Specification.new do |gem|
   gem.name = "boar"
   gem.version = Boar::Version::STRING
   gem.homepage = "http://github.com/ShogunPanda/boar"
-  gem.summary = ""
-  gem.description = ""
+  gem.summary = "A Rails engine to handle local static pages and downloads on the cloud."
+  gem.description = "A Rails engine to handle local static pages and downloads on the cloud."
   gem.rubyforge_project = "boar"
 
   gem.authors = ["Shogun"]
@@ -22,10 +22,12 @@ Gem::Specification.new do |gem|
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  # TODO: OPTIONAL: Apply the folllowing to restrict Ruby version.
-  # gem.required_ruby_version = ">= 1.X"
+  gem.required_ruby_version = ">= 1.9.3"
 
-  # TODO: Add dependencies via gem.add_dependency
-
-  # TODO: Add development dependencies via gem.add_development_dependency
+  gem.add_dependency("rails", ">= 3.2.12")
+  gem.add_dependency("mustache", "~> 0.99.4")
+  gem.add_dependency("mbrao", "~> 1.1.1")
+  gem.add_dependency("redis", "~> 3.0.3")
+  gem.add_dependency("oj", "~> 2.0.10")
+  gem.add_dependency("elephas", "~> 3.0.0")
 end

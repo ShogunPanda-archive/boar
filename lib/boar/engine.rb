@@ -4,10 +4,13 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-source "http://rubygems.org"
+module Boar
+  class Engine < ::Rails::Engine
+    isolate_namespace Boar
+    mattr_accessor :backend
 
-gemspec
-
-# Testing
-gem "rspec", "~> 2.12.0"
-gem "rake", "~> 10.0.3"
+    initializer "boar.configuration" do |app|
+      app.config.boar = Boar::Configuration.new(app)
+    end
+  end
+end

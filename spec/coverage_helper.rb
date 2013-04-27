@@ -12,7 +12,6 @@ SimpleCov.start do
 
   add_filter do |src_file|
     path = Pathname.new(src_file.filename).relative_path_from(root).to_s
-      
-      # TODO: Add exclusions here
+    path !~ /\.rb$/ || path !~ /^(app|bin|lib)/
   end
 end
