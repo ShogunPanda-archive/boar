@@ -58,7 +58,6 @@ namespace :boar do
     begin
       open(configuration_path, "w") {|f| f.write(configuration.to_yaml) }
     rescue => e
-      raise e
       raise e.is_a?(ArgumentError) ? e : RuntimeError.new("Cannot write file #{configuration_path}.")
     end
   end
