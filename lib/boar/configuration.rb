@@ -59,6 +59,7 @@ module Boar
           downloads_root: "downloads",
           downloads_directory: "{{root}}/files",
           config_file: "{{root}}/config/downloads.yml",
+          credentials_file: "{{root}}/config/credentials.yml",
           default_provider: :local
         })
       end

@@ -30,4 +30,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency("redis", "~> 3.0.3")
   gem.add_dependency("oj", "~> 2.0.10")
   gem.add_dependency("elephas", "~> 3.0.0")
+  gem.add_dependency("clavem", "~> 1.2.2")
+  gem.add_dependency("dropbox-sdk", "~> 1.5.1")
 end

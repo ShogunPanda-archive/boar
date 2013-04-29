@@ -10,8 +10,14 @@ require "mime-types"
 require "redis"
 require "oj"
 
+require "clavem"
+require "dropbox_sdk"
+
 require "boar/version" if !defined?(Boar::Version)
 require "boar/configuration"
 require "boar/router"
 require "boar/engine"
 require "boar/exceptions"
+
+require "boar/credentials/base"
+require "boar/credentials/dropbox"
