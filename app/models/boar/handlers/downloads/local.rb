@@ -13,10 +13,10 @@ module Boar
 
           # Normalize the root
           @root = self.get_option(options, :directory, Rails.application.config.boar.downloads_directory)
-          @root = self.interpolate(@root, {root: Rails.root, domain: @service.controller.request.domain, controller: @controller})
+          @root = self.interpolate(@root, {root: Rails.root, request: @service.controller.request, controller: @controller})
         end
 
-        def call(path, entry)
+        def call(path, entry, _, _)
           # Get the full path
           file = Pathname.new(@root) + path
           raise Boar::Exceptions::NotFound.new(path) if !file.exist?

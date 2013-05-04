@@ -14,7 +14,8 @@ module Boar
           root: Boar::Handlers::Root,
           authentication: Boar::Handlers::Authentication,
           locale: Boar::Handlers::Locale,
-          views: Boar::Handlers::Views
+          views: Boar::Handlers::Views,
+          hosts: Boar::Handlers::Hosts,
         }
       }
 
@@ -23,7 +24,8 @@ module Boar
     end
 
     def backend_key(key, _, request)
-      "boar[#{request.domain}:#{request.port}]:#{key}"
+      host = self.handlers[:hosts].new.call(request)
+      "boar[#{host}]:#{key}"
     end
 
     def method_missing(method, *args, &block)

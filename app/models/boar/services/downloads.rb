@@ -20,13 +20,16 @@ module Boar
           load_configuration() # Instantiate the configuration
 
           # Try to match the path against the list of files
-          found = @downloads_configuration[:files].find{ |k, _| path =~ Regexp.new("^#{k}$") }
+          match_data = nil
+          found = @downloads_configuration[:files].find{ |k, _| match_data = Regexp.new("^#{k}$").match(path) }
           raise Boar::Exceptions::NotFound.new(path) if !found
-          entry = get_entry(found)
+
+          # Get entry
+          regexp, entry = split_entry(found)
 
           # Now execute the provider. This will take care of acting on the controller
           begin
-            provider_for_entry(entry).call(path, entry)
+            provider_for_entry(entry).call(path, entry, regexp, match_data)
           rescue ::Mbrao::Exceptions::Unimplemented => e
             raise Mbrao::Exceptions::Unimplemented.new(e)
           end
@@ -50,26 +53,27 @@ module Boar
       end
 
       private
-        def get_entry(found)
+        def split_entry(found)
           rv = found.last
           rv = rv.is_a?(Hash) ? rv.symbolize_keys : {provider: rv.ensure_string.to_sym} # Make sure there is a provider key
 
           # Get default provider is nothing is there
           rv[:provider] ||= get_option(@options, :default_provider, @configuration.default_provider).to_s
 
-          rv
+          [found.first, rv]
         end
 
         def provider_for_entry(entry)
           # Instantiate the provider
           @providers ||= {}
-          @providers[entry[:provider]] ||= ::Lazier.find_class(entry[:provider], "::Boar::Handlers::Downloads::%CLASS%").new(self, @downloads_configuration[:options])
+          @providers[entry[:provider]] ||= ::Lazier.find_class(entry[:provider], "::Boar::Handlers::Downloads::%CLASS%", true).new(self, @downloads_configuration[:options])
         end
 
         def load_configuration(force = false)
           # Setup stuff
           config = Rails.application.config.boar
           template = get_option(@options, :config, @configuration.config_file)
+          host =
           key = @configuration.backend_key("downloads", self, @controller.request)
 
           # Delete from configuration
@@ -83,7 +87,7 @@ module Boar
             HashWithIndifferentAccess.new(raw_downloads) # Just parse the read data
           else
             # Read the config file
-            downloads = YAML.load_file(self.interpolate(template, {root: Rails.root, domain: @controller.request.domain, controller: self}))
+            downloads = YAML.load_file(self.interpolate(template, {root: Rails.root, request: @controller.request, controller: self}))
 
             # Normalize
             downloads = normalize_configuration(downloads)
@@ -97,8 +101,14 @@ module Boar
 
         def normalize_configuration(configuration)
           configuration = HashWithIndifferentAccess.new(ensure_hash(configuration))
+
+          # Scope by host
+          configuration = ensure_hash(configuration[self.handler_for(:hosts).call(@controller.request)])
+
+          # Adjust some defaults
           configuration[:files] = ensure_hash(configuration[:files])
           configuration[:options] = ensure_hash(configuration[:options]).deep_symbolize_keys
+
           configuration
         end
     end

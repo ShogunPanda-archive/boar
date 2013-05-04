@@ -16,8 +16,21 @@ module Boar
           @options = ensure_hash(options)
 
           # Get the configuration for the provider
-          key = self.class.name.demodulize.parameterize.to_sym
-          @provider_options = ensure_hash(@options[:providers]).fetch(key, {}).deep_symbolize_keys
+          @provider_options = ensure_hash(@options[:providers]).fetch(self.class_key, {}).deep_symbolize_keys
+        end
+
+        def call(_, _, _, _)
+          raise Boar::Exceptions::UnImplemented.new
+        end
+
+        def class_key
+          self.class.name.demodulize.parameterize.to_sym
+        end
+
+        def credentials
+          # TODO: Translate domain+port using host mapper in the interpolation - Also, only load the specific section
+          all_credentials = YAML.load_file(self.interpolate(@configuration.credentials_file, {root: Rails.root, request: @service.controller.request, controller: @service.controller}))
+          all_credentials.fetch(self.class_key)
         end
       end
     end

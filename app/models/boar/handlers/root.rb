@@ -18,7 +18,7 @@ module Boar
 
       def call(*_)
         # Interpolate to a directory
-        Pathname.new(self.interpolate(@template, {root: Rails.root, domain: @service.controller.request.domain, controller: @service.controller}))
+        Pathname.new(self.interpolate(@template, {root: Rails.root, request: @service.controller.request, controller: @service.controller}))
       end
     end
   end
