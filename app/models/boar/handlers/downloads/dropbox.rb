@@ -16,20 +16,17 @@ module Boar
           @client = ::DropboxClient.new(@session, @root)
         end
 
-        def call(path, entry, regexp, match_data)
-          # Get the final path
-          final_path = entry[:path].gsub(/\\(\d+)/) { |m| match_data[$1.to_i] }
-
+        def call(path, entry, regexp, match_data, skip_cache = false)
           # Read the URL from Redis
-          key = @configuration.backend_key("downloads:dropbox[#{final_path}]", self, @service.controller.request)
+          key = @configuration.backend_key("downloads:dropbox[#{path}]", self, @service.controller.request)
           url = @configuration.backend.get(key)
 
-          if true || url.blank? then
+          if skip_cache || url.blank? then
             begin
-              inline = entry[:disposition] == "inline"
-              share =  inline ? @client.shares(final_path) : self.direct_shares(final_path)
+              attachment = entry[:disposition] != "inline"
+              share =  attachment ? self.direct_shares(path) : @client.shares(path)
 
-              url = share["url"] + (!inline ? "?dl=1" : "")
+              url = share["url"] + (attachment ? "?dl=1" : "")
               expire = DateTime.parse(share["expires"], "%a, %d %b %Y %T %Z")
 
               # Save the URL

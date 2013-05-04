@@ -10,6 +10,8 @@ module Boar
       attr_accessor :downloads_configuration
 
       def downloads
+        @skip_cache = @controller.request.params["skip_cache"].to_boolean
+
         # Get the full path
         path = [@params[:path], @params[:format]].compact.join(".")
 
@@ -17,7 +19,7 @@ module Boar
         self.handle_authentication(path, @options)
 
         if !controller.performed? then
-          load_configuration() # Instantiate the configuration
+          load_configuration(@skip_cache) # Instantiate the configuration
 
           # Try to match the path against the list of files
           match_data = nil
@@ -29,7 +31,7 @@ module Boar
 
           # Now execute the provider. This will take care of acting on the controller
           begin
-            provider_for_entry(entry).call(path, entry, regexp, match_data)
+            provider_for_entry(entry).call(path, entry, regexp, match_data, @skip_cache)
           rescue ::Mbrao::Exceptions::Unimplemented => e
             raise Mbrao::Exceptions::Unimplemented.new(e)
           end
@@ -55,7 +57,7 @@ module Boar
       private
         def split_entry(found)
           rv = found.last
-          rv = rv.is_a?(Hash) ? rv.symbolize_keys : {provider: rv.ensure_string.to_sym} # Make sure there is a provider key
+          rv = HashWithIndifferentAccess.new(rv.is_a?(Hash) ? rv : {provider: rv.ensure_string.to_sym}) # Make sure there is a provider key
 
           # Get default provider is nothing is there
           rv[:provider] ||= get_option(@options, :default_provider, @configuration.default_provider).to_s
@@ -73,7 +75,6 @@ module Boar
           # Setup stuff
           config = Rails.application.config.boar
           template = get_option(@options, :config, @configuration.config_file)
-          host =
           key = @configuration.backend_key("downloads", self, @controller.request)
 
           # Delete from configuration
@@ -100,14 +101,14 @@ module Boar
         end
 
         def normalize_configuration(configuration)
-          configuration = HashWithIndifferentAccess.new(ensure_hash(configuration))
+          configuration = ensure_hash(configuration)
 
           # Scope by host
           configuration = ensure_hash(configuration[self.handler_for(:hosts).call(@controller.request)])
 
           # Adjust some defaults
           configuration[:files] = ensure_hash(configuration[:files])
-          configuration[:options] = ensure_hash(configuration[:options]).deep_symbolize_keys
+          configuration[:options] = ensure_hash(configuration[:options])
 
           configuration
         end

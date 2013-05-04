@@ -40,7 +40,7 @@ namespace :boar do
     begin
       credentials = nil
 
-      authorizer = Clavem::Authorizer.new do |auth, req, res|
+      authorizer = Clavem::Authorizer.new(configuration.fetch(:authorizer_host, "localhost"), configuration.fetch(:authorizer_port, "2501")) do |auth, req, res|
         credentials = provider.get_credentials(auth, req, res)
       end
 
@@ -51,6 +51,7 @@ namespace :boar do
       authorizer.authorize(url)
       all_configurations[host][provider_name] = configuration.merge(credentials).to_hash
     rescue => e
+      raise e
       raise case e.class.to_s
         when "ArgumentError" then e
         when "AuthorizationDenied" then Clavem::Exceptions::AuthorizationDenied.new("Authorization denied for provider #{provider_name}.")

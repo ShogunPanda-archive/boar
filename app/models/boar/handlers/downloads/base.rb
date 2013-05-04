@@ -24,13 +24,16 @@ module Boar
         end
 
         def class_key
-          self.class.name.demodulize.parameterize.to_sym
+          self.class.name.demodulize.underscore
         end
 
         def credentials
-          # TODO: Translate domain+port using host mapper in the interpolation - Also, only load the specific section
           all_credentials = YAML.load_file(self.interpolate(@configuration.credentials_file, {root: Rails.root, request: @service.controller.request, controller: @service.controller}))
-          all_credentials.fetch(self.class_key)
+          HashWithIndifferentAccess.new(all_credentials.fetch(@service.handler_for(:hosts).call(@service.controller.request)).fetch(self.class_key))
+        end
+
+        def finalize_path(path, match_data)
+          path.gsub(/\\(\d+)/) { |m| match_data[$1.to_i] }
         end
       end
     end

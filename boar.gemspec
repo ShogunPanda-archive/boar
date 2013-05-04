@@ -31,5 +31,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency("oj", "~> 2.0.10")
   gem.add_dependency("elephas", "~> 3.0.0")
   gem.add_dependency("clavem", "~> 1.2.2")
+
+  # Downloads gem
   gem.add_dependency("dropbox-sdk", "~> 1.5.1")
+  gem.add_dependency("google-api-client", "~> 0.6.3")
 end

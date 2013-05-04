@@ -12,6 +12,7 @@ require "oj"
 
 require "clavem"
 require "dropbox_sdk"
+require "google/api_client"
 
 require "boar/version" if !defined?(Boar::Version)
 require "boar/configuration"
@@ -21,3 +22,4 @@ require "boar/exceptions"
 
 require "boar/credentials/base"
 require "boar/credentials/dropbox"
+require "boar/credentials/google_drive"
