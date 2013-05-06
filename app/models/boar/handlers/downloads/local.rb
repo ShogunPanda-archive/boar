@@ -16,7 +16,7 @@ module Boar
           @root = self.interpolate(@root, {root: Rails.root, request: @service.controller.request, controller: @controller})
         end
 
-        def call(path, entry, _, _)
+        def call(path, entry, _, _, _)
           # Get the full path
           file = Pathname.new(@root) + path
           raise Boar::Exceptions::NotFound.new(path) if !file.exist?

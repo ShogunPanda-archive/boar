@@ -10,8 +10,6 @@ module Boar
       attr_accessor :downloads_configuration
 
       def downloads
-        @skip_cache = @controller.request.params["skip_cache"].to_boolean
-
         # Get the full path
         path = [@params[:path], @params[:format]].compact.join(".")
 
@@ -29,9 +27,12 @@ module Boar
           # Get entry
           regexp, entry = split_entry(found)
 
+          # Map the path
+          path = self.handler_for(:downloads_mapper, options).call(self, path)
+
           # Now execute the provider. This will take care of acting on the controller
           begin
-            provider_for_entry(entry).call(path, entry, regexp, match_data, @skip_cache)
+            provider_for_entry(entry).call(path, entry, @skip_cache, regexp, match_data)
           rescue ::Mbrao::Exceptions::Unimplemented => e
             raise Mbrao::Exceptions::Unimplemented.new(e)
           end

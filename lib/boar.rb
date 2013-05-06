@@ -13,6 +13,7 @@ require "oj"
 require "clavem"
 require "dropbox_sdk"
 require "google/api_client"
+require "aws-sdk"
 
 require "boar/version" if !defined?(Boar::Version)
 require "boar/configuration"

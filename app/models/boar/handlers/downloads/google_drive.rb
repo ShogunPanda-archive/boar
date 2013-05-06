@@ -22,7 +22,7 @@ module Boar
           @api = @client.discovered_api('drive', 'v2')
         end
 
-        def call(path, entry, regexp, match_data, skip_cache = false)
+        def call(path, entry, skip_cache, _, _)
           # Read the URL from Redis
           key = @configuration.backend_key("downloads:google_drive[#{path}]", self, @service.controller.request)
           url = @configuration.backend.get(key)
@@ -39,9 +39,9 @@ module Boar
               url = file.alternate_link if entry["disposition"] == "inline"
               raise Boar::Exceptions::NotFound if url.blank?
 
-              @configuration.backend.set(key, url)
+              # Save the URL
+              @configuration.backend.set(key, url) if url.present?
             rescue => e
-              raise e
               raise Boar::Exceptions::ServerError.new("[#{e.class}] #{e.message}")
             end
           end

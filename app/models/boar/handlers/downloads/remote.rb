@@ -8,7 +8,7 @@ module Boar
   module Handlers
     module Downloads
       class Remote < Base
-        def call(path, entry, _, _)
+        def call(path, entry, _, _, _)
           # Get the url
           url = entry[:url]
 

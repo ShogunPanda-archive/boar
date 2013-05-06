@@ -10,12 +10,13 @@ module Boar
       @data = {
         app: app,
         backend: Redis.new,
+        skip_cache_param: "sc",
         handlers: {
           root: Boar::Handlers::Root,
           authentication: Boar::Handlers::Authentication,
           locale: Boar::Handlers::Locale,
           views: Boar::Handlers::Views,
-          hosts: Boar::Handlers::Hosts,
+          hosts: Boar::Handlers::Hosts
         }
       }
 
@@ -54,6 +55,8 @@ module Boar
             error: "errors/{{code}}"
           }
         })
+
+        @data[:handlers].merge!({pages_mapper: Boar::Handlers::PathMapper})
       end
 
       def initialize_downloads
@@ -64,6 +67,8 @@ module Boar
           credentials_file: "{{root}}/config/credentials.yml",
           default_provider: :local
         })
+
+        @data[:handlers].merge!({downloads_mapper: Boar::Handlers::PathMapper})
       end
   end
 end

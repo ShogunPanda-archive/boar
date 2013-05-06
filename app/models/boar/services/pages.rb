@@ -11,6 +11,9 @@ module Boar
         # Get the path
         path = @controller.params[:path]
 
+        # Map the path
+        path = self.handler_for(:pages_mapper, options).call(self, path)
+
         # Handle ACL for the path
         self.handle_authentication(path, @options)
 

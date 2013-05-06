@@ -16,7 +16,7 @@ module Boar
           @client = ::DropboxClient.new(@session, @root)
         end
 
-        def call(path, entry, regexp, match_data, skip_cache = false)
+        def call(path, entry, skip_cache, _, _)
           # Read the URL from Redis
           key = @configuration.backend_key("downloads:dropbox[#{path}]", self, @service.controller.request)
           url = @configuration.backend.get(key)
@@ -30,8 +30,10 @@ module Boar
               expire = DateTime.parse(share["expires"], "%a, %d %b %Y %T %Z")
 
               # Save the URL
-              @configuration.backend.set(key, url)
-              @configuration.backend.expire(key, expire.to_i)
+              if url.present? then
+                @configuration.backend.set(key, url)
+                @configuration.backend.expire(key, expire.to_i)
+              end
             rescue => e
               if e.message =~ /Path .+ not found/ then
                 raise Boar::Exceptions::NotFound.new(path)

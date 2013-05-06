@@ -19,6 +19,9 @@ module Boar
         @configuration = Rails.application.config.boar
         @options = @controller.boar_options
         @params = @controller.params
+
+        skip_cache_param = get_option(@options, :skip_cache_param, @configuration.skip_cache_param)
+        @skip_cache = skip_cache_param ? @controller.request.params[skip_cache_param].to_boolean : false
       end
 
       def run(method)
