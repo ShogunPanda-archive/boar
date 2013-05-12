@@ -11,7 +11,7 @@ module Boar
 
       def downloads
         # Get the full path
-        path = [@params[:path], @params[:format]].compact.join(".")
+        path = @params[:path]
 
         # Handle ACL for the path
         self.handle_authentication(path, @options)

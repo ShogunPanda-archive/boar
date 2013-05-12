@@ -10,15 +10,8 @@ module Boar
       class GoogleDrive < Base
         def initialize(service, options)
           super(service, options)
-
-          configuration = self.credentials
-          authorizer = Clavem::Authorizer.new(configuration.fetch(:authorizer_host, "localhost"), configuration.fetch(:authorizer_port, "2501"))
-
-          @client = Boar::Credentials::GoogleDrive.client(configuration)
-          @client.authorization.redirect_uri = authorizer.callback_url
-          @client.authorization.refresh_token = configuration["token"]
-          @client.authorization.fetch_access_token!
-
+          configuration = self.load_credentials
+          @client = Boar::Providers::GoogleDrive.authorized_client(configuration)
           @api = @client.discovered_api('drive', 'v2')
         end
 
@@ -30,7 +23,7 @@ module Boar
           if skip_cache || url.blank? then
             begin
               # Get the file
-              result = @client.execute(api_method: @api.files.get, parameters: {"fileId" => entry["id"]})
+              result = @client.execute(api_method: @api.files.get, parameters: {"fileId" => entry[:id]})
               raise Boar::Exceptions::NotFound if result.status == 404
 
               # Get the share link

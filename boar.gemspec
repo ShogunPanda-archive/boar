@@ -36,4 +36,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency("dropbox-sdk", "~> 1.5.1")
   gem.add_dependency("google-api-client", "~> 0.6.3")
   gem.add_dependency("aws-sdk", "~> 1.9.5")
+  gem.add_dependency("ruby-box", "~> 1.2.0")
+  gem.add_dependency("skydrive", "~> 0.1.0")
 end

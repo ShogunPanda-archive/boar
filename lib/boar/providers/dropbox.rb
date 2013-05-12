@@ -5,9 +5,9 @@
 #
 
 module Boar
-  module Credentials
+  module Providers
     class Dropbox < Base
-      def redirect_for(authorizer, configuration)
+      def redirect_for_authentication(authorizer, configuration)
         @session = DropboxSession.new(configuration[:app_key], configuration[:app_secret])
         @session.get_request_token
         @session.get_authorize_url + "&oauth_callback=#{authorizer.callback_url}"

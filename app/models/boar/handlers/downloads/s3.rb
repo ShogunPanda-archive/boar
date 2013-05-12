@@ -9,10 +9,12 @@ module Boar
     module Downloads
       #noinspection RubyClassModuleNamingConvention
       class S3 < Base
+        URL_AGE = 604800
+
         def initialize(service, options)
           super(service, options)
 
-          configuration = self.credentials
+          configuration = self.load_credentials
           @s3_configuration = {access_key_id: configuration[:access_key], secret_access_key: configuration[:access_secret], region: configuration[:region]}
         end
 
@@ -23,19 +25,20 @@ module Boar
 
           if skip_cache || url.blank? then
             begin
+              # Update the region
               @s3_configuration[:region] = entry[:region] if entry[:region].present?
 
-              client = AWS::S3.new(@s3_configuration)
-              object = client.buckets[entry[:bucket]].objects[entry[:key]]
+              # Get the object
+              object = AWS::S3.new(@s3_configuration).buckets[entry[:bucket]].objects[entry[:key]]
               raise ArgumentError if !object.exists?
 
-              expire = 1.week
-              url = object.url_for(:read, response_content_disposition: entry[:disposition], expire: expire).to_s
+              # Get the public URL
+              url = object.url_for(:read, response_content_disposition: entry[:disposition], expire: Boar::Handlers::Downloads::S3::URL_AGE).to_s
 
               # Save the URL
               if url.present? then
                 @configuration.backend.set(key, url)
-                @configuration.backend.expire(key, expire)
+                @configuration.backend.expire(key, Boar::Handlers::Downloads::S3::URL_AGE)
               end
             rescue => e
               raise Boar::Exceptions::ServerError.new("[#{e.class}] #{e.message}")

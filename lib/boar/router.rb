@@ -48,7 +48,7 @@ module Boar
       router.scope(module: :boar) do
         yield(router, options) if block_given?
         router.match("#{root}", {controller: options.fetch(:controller, "downloads"), action: :update, via: :put, boar_options: options}.merge(route_options))
-        router.match("#{root}(*path)", route_controller(options, "downloads#main").merge({via: :get, boar_options: options}).merge(route_options))
+        router.match("#{root}(*path)", route_controller(options, "downloads#main").merge({via: :get, constraints: {path: /.+/}, boar_options: options}).merge(route_options))
       end
     end
 

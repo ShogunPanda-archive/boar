@@ -4,6 +4,9 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
+# TODO: Embed the specific configuration here, and then use a get("key.subkey") interface
+# TODO: Reorganize all options
+
 module Boar
   class Configuration
     def initialize(app)

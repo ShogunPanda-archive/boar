@@ -11,7 +11,7 @@ module Boar
         def initialize(service, options)
           super(service, options)
 
-          @session = ::DropboxSession.deserialize(credentials[:session])
+          @session = ::DropboxSession.deserialize(load_credentials[:session])
           @root = @provider_options.fetch(:root, "dropbox").to_sym
           @client = ::DropboxClient.new(@session, @root)
         end
@@ -24,7 +24,7 @@ module Boar
           if skip_cache || url.blank? then
             begin
               attachment = entry[:disposition] != "inline"
-              share =  attachment ? self.direct_shares(path) : @client.shares(path)
+              share =  attachment ? self.direct_shares(entry[:path]) : @client.shares(entry[:path])
 
               url = share["url"] + (attachment ? "?dl=1" : "")
               expire = DateTime.parse(share["expires"], "%a, %d %b %Y %T %Z")

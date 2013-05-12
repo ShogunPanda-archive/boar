@@ -19,6 +19,7 @@ module Boar
           @provider_options = ensure_hash(@options[:providers]).fetch(self.class_key, {}).deep_symbolize_keys
         end
 
+        # TODO: Create something Elephas.use for the remote implementations
         def call(_, _, _, _)
           raise Boar::Exceptions::UnImplemented.new
         end
@@ -27,9 +28,23 @@ module Boar
           self.class.name.demodulize.underscore
         end
 
-        def credentials
-          all_credentials = YAML.load_file(self.interpolate(@configuration.credentials_file, {root: Rails.root, request: @service.controller.request, controller: @service.controller}))
-          HashWithIndifferentAccess.new(all_credentials.fetch(@service.handler_for(:hosts).call(@service.controller.request)).fetch(self.class_key))
+        def load_credentials
+          self.credentials_params[:single]
+        end
+
+        def credentials_params
+          host = @service.handler_for(:hosts).call(@service.controller.request)
+          path = self.interpolate(@configuration.credentials_file, {root: Rails.root, request: @service.controller.request, controller: @service.controller})
+          all = YAML.load_file(path)
+          name = self.class_key
+
+          {single: HashWithIndifferentAccess.new(all.fetch(host).fetch(name)), path: path, all: all, host: host, provider: self, name: name }
+        end
+
+        def update_credentials(credentials, params = nil)
+          params ||= self.credentials_params
+          params[:all][params[:host]][params[:name]] = params[:single].merge(credentials).to_hash
+          open(params[:path], "w") {|f| f.write(params[:all].to_yaml) }
         end
 
         def finalize_path(path, match_data)
