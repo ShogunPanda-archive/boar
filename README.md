@@ -24,3 +24,7 @@ http://github.com/ShogunPanda/boar
 Copyright (C) 2013 and above Shogun (shogun_panda@me.com).
 
 Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ShogunPanda/boar/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
