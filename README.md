@@ -1,21 +1,6 @@
-# Introduction
+# boar
 
-[![Gem Version](https://badge.fury.io/rb/boar.png)](http://badge.fury.io/rb/boar)
-[![Dependency Status](https://gemnasium.com/ShogunPanda/boar.png?travis)](https://gemnasium.com/ShogunPanda/boar)
-[![Build Status](https://secure.travis-ci.org/ShogunPanda/boar.png?branch=master)](https://travis-ci.org/ShogunPanda/boar)
-[![Code Climate](https://codeclimate.com/github/ShogunPanda/boar.png)](https://codeclimate.com/github/ShogunPanda/boar)
-
-## END OF DEVELOPMENT NOTICE
-
-# This gem has been discontinued.
-
-http://sw.cow.tc/boar
-
-http://rdoc.info/gems/boar
-
-## Usage
-
-**TODO**
+## END OF DEVELOPMENT NOTICE - This gem has been discontinued
 
 ## Contributing to boar
 
